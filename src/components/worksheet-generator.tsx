@@ -14,6 +14,7 @@ import { handleDifferentiatedWorksheets } from "@/app/actions"
 import { Loader2 } from "lucide-react"
 import type { GenerateDifferentiatedWorksheetsOutput } from "@/ai/flows/differentiated-material-generation"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { motion } from "framer-motion"
 
 const formSchema = z.object({
   photo: z.instanceof(File).refine(file => file.size > 0, "A photo is required."),
@@ -91,7 +92,7 @@ export function WorksheetGenerator() {
             />
 
             {preview && (
-              <div className="flex justify-center p-2 border rounded-md bg-white">
+              <div className="flex justify-center p-2 border rounded-md bg-secondary">
                 <Image src={preview} alt="Image preview" width={200} height={250} className="rounded-md object-contain" />
               </div>
             )}
@@ -126,12 +127,17 @@ export function WorksheetGenerator() {
          </CardContent>
       )}
       {result && result.worksheets.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
         <CardContent>
           <div className="mt-6 space-y-4">
             <h3 className="font-bold font-headline text-lg">Generated Worksheets:</h3>
             <Accordion type="single" collapsible className="w-full">
               {result.worksheets.map((ws, index) => (
-                <AccordionItem value={`item-${index}`} key={index} className="bg-white dark:bg-muted/20 rounded-md mb-2 px-4 border">
+                <AccordionItem value={`item-${index}`} key={index} className="bg-secondary rounded-md mb-2 px-4 border">
                   <AccordionTrigger className="font-headline text-base">Grade Level: {ws.gradeLevel}</AccordionTrigger>
                   <AccordionContent>
                       <div className="whitespace-pre-wrap font-body text-foreground/90">{ws.worksheetContent}</div>
@@ -141,6 +147,7 @@ export function WorksheetGenerator() {
             </Accordion>
           </div>
         </CardContent>
+        </motion.div>
       )}
     </Card>
   )

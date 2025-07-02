@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast"
 import { handleKnowledgeExplanation } from "@/app/actions"
 import { Loader2 } from "lucide-react"
 import type { InstantKnowledgeExplanationOutput } from "@/ai/flows/instant-knowledge-explanations"
+import { motion } from "framer-motion"
 
 const formSchema = z.object({
   question: z.string().min(1, "Question is required."),
@@ -97,12 +98,18 @@ export function KnowledgeBase() {
          </CardContent>
       )}
       {result && (
-        <CardContent>
-          <div className="mt-6 p-4 border rounded-md bg-white dark:bg-muted/20">
-            <h3 className="font-bold mb-2 font-headline text-lg">Explanation:</h3>
-            <p className="whitespace-pre-wrap font-body text-foreground/90">{result.explanation}</p>
-          </div>
-        </CardContent>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <CardContent>
+            <div className="mt-6 p-4 border rounded-md bg-muted/20">
+              <h3 className="font-bold mb-2 font-headline text-lg">Explanation:</h3>
+              <p className="whitespace-pre-wrap font-body text-foreground/90">{result.explanation}</p>
+            </div>
+          </CardContent>
+        </motion.div>
       )}
     </Card>
   )

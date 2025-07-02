@@ -13,6 +13,7 @@ import { handleVisualAid } from "@/app/actions"
 import { Loader2 } from "lucide-react"
 import type { GenerateVisualAidOutput } from "@/ai/flows/visual-aid-design"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 const formSchema = z.object({
   description: z.string().min(1, "Description is required."),
@@ -83,8 +84,13 @@ export function VisualAidGenerator() {
          </CardContent>
       )}
       {result && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
         <CardContent>
-          <div className="mt-6 p-4 border rounded-md bg-white dark:bg-muted/20">
+          <div className="mt-6 p-4 border rounded-md bg-muted/20">
             <h3 className="font-bold mb-4 font-headline text-lg text-center">Generated Visual Aid:</h3>
             <div className="flex justify-center">
               <Image 
@@ -92,11 +98,12 @@ export function VisualAidGenerator() {
                 alt="Generated visual aid" 
                 width={400} 
                 height={400}
-                className="rounded-md border-2 border-border bg-white"
+                className="rounded-md border-2 border-border"
               />
             </div>
           </div>
         </CardContent>
+        </motion.div>
       )}
     </Card>
   )

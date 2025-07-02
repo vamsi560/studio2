@@ -1,64 +1,89 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { LocalContentGenerator } from "@/components/local-content-generator"
-import { WorksheetGenerator } from "@/components/worksheet-generator"
-import { KnowledgeBase } from "@/components/knowledge-base"
-import { VisualAidGenerator } from "@/components/visual-aid-generator"
-import { Logo } from "@/components/logo"
-import { Bot, FileText, Lightbulb, Image as ImageIcon } from "lucide-react"
+'use client'
 
-export default function Home() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Logo } from '@/components/logo';
+import { Loader2 } from 'lucide-react';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      router.push('/dashboard');
+    }, 1500);
+  };
+
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="sticky top-0 z-10 flex h-20 items-center gap-4 border-b bg-background px-4 md:px-6">
-        <div className="flex items-center gap-4">
-          <Logo />
-          <h1 className="text-3xl font-bold font-headline text-foreground">
-            Sahayak AI
-          </h1>
-        </div>
-      </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold font-headline">Your AI Teaching Companion</h2>
-            <p className="text-muted-foreground mt-2 font-body">
-              Tools to empower teachers in multi-grade classrooms. Create, differentiate, and explain with ease.
-            </p>
-          </div>
-          <Tabs defaultValue="local-content" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 h-auto">
-              <TabsTrigger value="local-content" className="py-2 flex-col h-auto gap-1 text-sm">
-                <FileText className="h-5 w-5 mb-1" />
-                <span>Local Content</span>
-              </TabsTrigger>
-              <TabsTrigger value="differentiated-materials" className="py-2 flex-col h-auto gap-1 text-sm">
-                <Bot className="h-5 w-5 mb-1" />
-                <span>Worksheets</span>
-              </TabsTrigger>
-              <TabsTrigger value="knowledge-base" className="py-2 flex-col h-auto gap-1 text-sm">
-                <Lightbulb className="h-5 w-5 mb-1" />
-                <span>Knowledge Base</span>
-              </TabsTrigger>
-              <TabsTrigger value="visual-aids" className="py-2 flex-col h-auto gap-1 text-sm">
-                <ImageIcon className="h-5 w-5 mb-1" />
-                <span>Visual Aids</span>
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="local-content">
-              <LocalContentGenerator />
-            </TabsContent>
-            <TabsContent value="differentiated-materials">
-              <WorksheetGenerator />
-            </TabsContent>
-            <TabsContent value="knowledge-base">
-              <KnowledgeBase />
-            </TabsContent>
-            <TabsContent value="visual-aids">
-              <VisualAidGenerator />
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-    </div>
-  )
+    <main className="flex items-center justify-center min-h-screen bg-background p-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+      >
+        <Card className="w-full max-w-sm border-2 border-primary/20 shadow-lg shadow-primary/10">
+          <CardHeader className="text-center">
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex justify-center mb-4"
+            >
+              <Logo />
+            </motion.div>
+            <CardTitle className="text-3xl font-headline text-primary">
+              Sahayak AI
+            </CardTitle>
+            <CardDescription className="font-body">
+              Your AI Teaching Companion. Please login to continue.
+            </CardDescription>
+          </CardHeader>
+          <form onSubmit={handleLogin}>
+            <CardContent className="space-y-4">
+              <motion.div
+                initial={{ x: -50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="space-y-2"
+              >
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" type="email" placeholder="teacher@example.com" required />
+              </motion.div>
+              <motion.div
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="space-y-2"
+              >
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" required placeholder="********" />
+              </motion.div>
+            </CardContent>
+            <CardFooter>
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                className="w-full"
+              >
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Login
+                </Button>
+              </motion.div>
+            </CardFooter>
+          </form>
+        </Card>
+      </motion.div>
+    </main>
+  );
 }
