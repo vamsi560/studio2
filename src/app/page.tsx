@@ -30,7 +30,7 @@ export default function LoginPage() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
       >
-        <Card className="w-full max-w-sm border-2 border-primary/20 shadow-lg shadow-primary/10">
+        <Card className="w-full max-w-sm">
           <CardHeader className="text-center">
             <motion.div
               initial={{ y: -50, opacity: 0 }}
@@ -56,7 +56,7 @@ export default function LoginPage() {
                 className="space-y-2"
               >
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="teacher@example.com" required />
+                <Input id="email" type="email" placeholder="teacher@example.com" required defaultValue="teacher@example.com" />
               </motion.div>
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
@@ -65,7 +65,7 @@ export default function LoginPage() {
                 className="space-y-2"
               >
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required placeholder="********" />
+                <Input id="password" type="password" required placeholder="********" defaultValue="password" />
               </motion.div>
             </CardContent>
             <CardFooter>
