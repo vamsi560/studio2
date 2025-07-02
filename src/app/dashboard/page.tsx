@@ -9,7 +9,7 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold font-headline">Your AI Teaching Companion</h2>
+        <h2 className="text-3xl font-bold font-headline text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Your AI Teaching Companion</h2>
         <p className="text-muted-foreground mt-2 font-body">
           Tools to empower teachers in multi-grade classrooms. Create, differentiate, and explain with ease.
         </p>

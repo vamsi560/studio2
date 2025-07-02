@@ -24,7 +24,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-background p-4">
+    <main className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -40,7 +40,7 @@ export default function LoginPage() {
             >
               <Logo />
             </motion.div>
-            <CardTitle className="text-3xl font-headline text-primary">
+            <CardTitle className="text-3xl font-headline text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
               Sahayak AI
             </CardTitle>
             <CardDescription className="font-body">
@@ -74,6 +74,7 @@ export default function LoginPage() {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
                 className="w-full"
+                whileHover={{ scale: 1.05 }}
               >
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

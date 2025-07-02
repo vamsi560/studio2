@@ -1,6 +1,6 @@
 export function Logo() {
   return (
-    <div className="flex items-center justify-center bg-primary/10 rounded-lg p-2 border border-primary/20">
+    <div className="flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/10 rounded-lg p-2 border border-primary/20">
       <svg
         className="w-8 h-8 text-primary"
         xmlns="http://www.w3.org/2000/svg"
