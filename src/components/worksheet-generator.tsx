@@ -137,7 +137,7 @@ export function WorksheetGenerator() {
             <h3 className="font-bold font-headline text-lg">Generated Worksheets:</h3>
             <Accordion type="single" collapsible className="w-full">
               {result.worksheets.map((ws, index) => (
-                <AccordionItem value={`item-${index}`} key={index} className="bg-secondary rounded-md mb-2 px-4 border">
+                <AccordionItem value={`item-${index}`} key={index} className="bg-background rounded-md mb-2 px-4 border">
                   <AccordionTrigger className="font-headline text-base">Grade Level: {ws.gradeLevel}</AccordionTrigger>
                   <AccordionContent>
                       <div className="whitespace-pre-wrap font-body text-foreground/90">{ws.worksheetContent}</div>

@@ -1,13 +1,38 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+'use client'
+
+import { useState } from "react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { LocalContentGenerator } from "@/components/local-content-generator"
 import { WorksheetGenerator } from "@/components/worksheet-generator"
 import { KnowledgeBase } from "@/components/knowledge-base"
 import { VisualAidGenerator } from "@/components/visual-aid-generator"
 import { StoryWeaver } from "@/components/story-weaver"
 import { AssessmentGenerator } from "@/components/assessment-generator"
-import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion } from "lucide-react"
+import { LessonPlanner } from "@/components/lesson-planner"
+import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck } from "lucide-react"
+
+const features = [
+  { value: 'lesson-planner', label: 'Lesson Planner', icon: BookOpenCheck, component: <LessonPlanner /> },
+  { value: 'local-content', label: 'Local Content', icon: FileText, component: <LocalContentGenerator /> },
+  { value: 'differentiated-materials', label: 'Worksheets', icon: Bot, component: <WorksheetGenerator /> },
+  { value: 'knowledge-base', label: 'Knowledge Base', icon: Lightbulb, component: <KnowledgeBase /> },
+  { value: 'visual-aids', label: 'Visual Aids', icon: ImageIcon, component: <VisualAidGenerator /> },
+  { value: 'story-weaver', label: 'Story Weaver', icon: Sparkles, component: <StoryWeaver /> },
+  { value: 'assessment-generator', label: 'Assessments', icon: FileQuestion, component: <AssessmentGenerator /> },
+];
+
 
 export default function DashboardPage() {
+  const [activeFeature, setActiveFeature] = useState('lesson-planner');
+
+  const activeComponent = features.find(f => f.value === activeFeature)?.component;
+
   return (
     <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
       <div className="text-center">
@@ -16,52 +41,28 @@ export default function DashboardPage() {
           Tools to empower teachers in multi-grade classrooms. Create, differentiate, and explain with ease.
         </p>
       </div>
-      <Tabs defaultValue="local-content" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-auto">
-          <TabsTrigger value="local-content" className="py-2 flex-col h-auto gap-1 text-sm">
-            <FileText className="h-5 w-5 mb-1" />
-            <span>Local Content</span>
-          </TabsTrigger>
-          <TabsTrigger value="differentiated-materials" className="py-2 flex-col h-auto gap-1 text-sm">
-            <Bot className="h-5 w-5 mb-1" />
-            <span>Worksheets</span>
-          </TabsTrigger>
-          <TabsTrigger value="knowledge-base" className="py-2 flex-col h-auto gap-1 text-sm">
-            <Lightbulb className="h-5 w-5 mb-1" />
-            <span>Knowledge Base</span>
-          </TabsTrigger>
-          <TabsTrigger value="visual-aids" className="py-2 flex-col h-auto gap-1 text-sm">
-            <ImageIcon className="h-5 w-5 mb-1" />
-            <span>Visual Aids</span>
-          </TabsTrigger>
-           <TabsTrigger value="story-weaver" className="py-2 flex-col h-auto gap-1 text-sm">
-            <Sparkles className="h-5 w-5 mb-1" />
-            <span>Story Weaver</span>
-          </TabsTrigger>
-          <TabsTrigger value="assessment-generator" className="py-2 flex-col h-auto gap-1 text-sm">
-            <FileQuestion className="h-5 w-5 mb-1" />
-            <span>Assessments</span>
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="local-content">
-          <LocalContentGenerator />
-        </TabsContent>
-        <TabsContent value="differentiated-materials">
-          <WorksheetGenerator />
-        </TabsContent>
-        <TabsContent value="knowledge-base">
-          <KnowledgeBase />
-        </TabsContent>
-        <TabsContent value="visual-aids">
-          <VisualAidGenerator />
-        </TabsContent>
-        <TabsContent value="story-weaver">
-          <StoryWeaver />
-        </TabsContent>
-        <TabsContent value="assessment-generator">
-          <AssessmentGenerator />
-        </TabsContent>
-      </Tabs>
+
+      <div className="w-full">
+         <Select onValueChange={setActiveFeature} value={activeFeature}>
+          <SelectTrigger className="w-full md:w-72 mx-auto">
+            <SelectValue placeholder="Select a feature..." />
+          </SelectTrigger>
+          <SelectContent>
+            {features.map(feature => (
+              <SelectItem key={feature.value} value={feature.value}>
+                <div className="flex items-center gap-2">
+                  <feature.icon className="h-4 w-4" />
+                  <span>{feature.label}</span>
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <div className="mt-4 w-full">
+        {activeComponent}
+      </div>
     </div>
   )
 }

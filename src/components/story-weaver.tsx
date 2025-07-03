@@ -10,8 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { handleStoryWeaver } from "@/app/actions"
-import { Loader2 } from "lucide-react"
+import { handleStoryWeaver, handleTextToSpeech } from "@/app/actions"
+import { Loader2, Volume2 } from "lucide-react"
 import type { GenerateStoryOutput } from "@/ai/flows/story-weaver"
 import { motion } from "framer-motion"
 
@@ -24,7 +24,9 @@ const formSchema = z.object({
 
 export function StoryWeaver() {
   const [isLoading, setIsLoading] = useState(false)
+  const [isTtsLoading, setIsTtsLoading] = useState(false)
   const [result, setResult] = useState<GenerateStoryOutput | null>(null)
+  const [audioSrc, setAudioSrc] = useState<string | null>(null)
   const { toast } = useToast()
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -35,6 +37,7 @@ export function StoryWeaver() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
     setResult(null)
+    setAudioSrc(null)
     const response = await handleStoryWeaver(values)
     setIsLoading(false)
     if (response.success && response.data) {
@@ -45,6 +48,23 @@ export function StoryWeaver() {
         title: "Error",
         description: response.error,
       })
+    }
+  }
+
+  async function onListen() {
+    if (!result?.story) return;
+    setIsTtsLoading(true)
+    setAudioSrc(null)
+    const response = await handleTextToSpeech({ text: result.story })
+    setIsTtsLoading(false)
+    if (response.success && response.data) {
+      setAudioSrc(response.data.audioDataUri)
+    } else {
+        toast({
+            variant: "destructive",
+            title: "Audio Error",
+            description: response.error,
+        })
     }
   }
 
@@ -133,7 +153,21 @@ export function StoryWeaver() {
         >
           <CardContent>
             <div className="mt-6 p-4 border rounded-md bg-muted/20">
-              <h3 className="font-bold mb-2 font-headline text-lg">Your Story:</h3>
+              <div className="flex justify-between items-center mb-2">
+                 <h3 className="font-bold font-headline text-lg">Your Story:</h3>
+                 <Button onClick={onListen} disabled={isTtsLoading || !result.story} variant="ghost" size="sm">
+                     {isTtsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Volume2 className="mr-2 h-4 w-4" />}
+                     Listen
+                 </Button>
+              </div>
+              {audioSrc && (
+                <div className="mb-4">
+                    <audio controls className="w-full">
+                        <source src={audioSrc} type="audio/wav" />
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+              )}
               <p className="whitespace-pre-wrap font-body text-foreground/90">{result.story}</p>
             </div>
           </CardContent>

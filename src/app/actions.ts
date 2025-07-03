@@ -5,7 +5,9 @@ import { generateDifferentiatedWorksheets, type GenerateDifferentiatedWorksheets
 import { instantKnowledgeExplanation, type InstantKnowledgeExplanationOutput } from '@/ai/flows/instant-knowledge-explanations'
 import { generateVisualAid, type GenerateVisualAidOutput } from '@/ai/flows/visual-aid-design'
 import { generateStory, type GenerateStoryOutput } from '@/ai/flows/story-weaver'
+import { textToSpeech, type TextToSpeechOutput } from '@/ai/flows/story-weaver-tts'
 import { generateAssessment, type GenerateAssessmentOutput } from '@/ai/flows/assessment-generator'
+import { generateLessonPlan, type GenerateLessonPlanOutput } from '@/ai/flows/lesson-planner'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -89,6 +91,17 @@ export const handleStoryWeaver = async (values: { topic: string, characters: str
   }
 }
 
+export const handleTextToSpeech = async (values: { text: string }): Promise<ActionResponse<TextToSpeechOutput>> => {
+    try {
+        const result = await textToSpeech(values);
+        return { success: true, data: result };
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, error: `Failed to generate audio: ${errorMessage}` };
+    }
+};
+
 export const handleAssessmentGeneration = async (values: { topic: string, numQuestions: number, questionTypes: string, gradeLevel: string }): Promise<ActionResponse<GenerateAssessmentOutput>> => {
   try {
     const result = await generateAssessment(values)
@@ -97,5 +110,16 @@ export const handleAssessmentGeneration = async (values: { topic: string, numQue
     console.error(error)
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
     return { success: false, error: `Failed to generate assessment: ${errorMessage}` }
+  }
+}
+
+export const handleLessonPlan = async (values: { topic: string, gradeLevel: string, duration: string, objectives: string }): Promise<ActionResponse<GenerateLessonPlanOutput>> => {
+  try {
+    const result = await generateLessonPlan(values)
+    return { success: true, data: result }
+  } catch (error) {
+    console.error(error)
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+    return { success: false, error: `Failed to generate lesson plan: ${errorMessage}` }
   }
 }
