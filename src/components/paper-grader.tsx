@@ -50,7 +50,7 @@ export function PaperGrader() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { gradingMode: 'key', answerKey: "" },
+    defaultValues: { gradingMode: 'key', answerKey: "", topic: "" },
   })
 
   const gradingMode = form.watch("gradingMode");

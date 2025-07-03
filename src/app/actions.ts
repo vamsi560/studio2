@@ -135,6 +135,10 @@ export const handlePaperGrader = async (formData: FormData): Promise<ActionRespo
       return { success: false, error: 'An image of the answer sheet is required.' };
     }
 
+    if (!answerKey && !topic) {
+        return { success: false, error: 'Either an answer key or a topic must be provided.' };
+    }
+
     const answerSheetImageUri = await fileToDataUri(answerSheetImage);
     const result = await paperGrader({
       answerSheetImageUri,
