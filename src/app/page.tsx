@@ -11,14 +11,14 @@ import { Logo } from '@/components/logo';
 import { Loader2, Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2 } from 'lucide-react';
 
 const features = [
-  { icon: FileText, label: 'Local Content', style: { top: '15%', left: '10%' }, y: [0, -20, 0], duration: 5 },
-  { icon: BookOpenCheck, label: 'Lesson Planner', style: { top: '25%', right: '8%' }, y: [0, 25, 0], duration: 6 },
-  { icon: Bot, label: 'Worksheets', style: { bottom: '30%', left: '5%' }, y: [0, -15, 0], duration: 7 },
-  { icon: Lightbulb, label: 'Knowledge Base', style: { bottom: '15%', right: '12%' }, y: [0, 20, 0], duration: 4 },
-  { icon: ImageIcon, label: 'Visual Aids', style: { top: '50%', left: '20%' }, x: [0, -20, 0], duration: 5 },
-  { icon: Sparkles, label: 'Story Weaver', style: { top: '60%', right: '22%' }, x: [0, 20, 0], duration: 8 },
-  { icon: FileCheck2, label: 'Paper Grader', style: { top: '5%', right: '30%' }, y: [0, -15, 0], duration: 6 },
-  { icon: FileQuestion, label: 'Assessments', style: { bottom: '10%', left: '35%' }, y: [0, 15, 0], duration: 5.5 },
+  { icon: FileText, label: 'Local Content', style: { top: '10%', left: '5%' }, y: [0, -20, 0], duration: 5 },
+  { icon: BookOpenCheck, label: 'Lesson Planner', style: { top: '15%', right: '5%' }, y: [0, 25, 0], duration: 6 },
+  { icon: Bot, label: 'Worksheets', style: { bottom: '20%', left: '2%' }, y: [0, -15, 0], duration: 7 },
+  { icon: Lightbulb, label: 'Knowledge Base', style: { bottom: '10%', right: '8%' }, y: [0, 20, 0], duration: 4 },
+  { icon: ImageIcon, label: 'Visual Aids', style: { top: '50%', left: '15%' }, x: [0, -20, 0], duration: 5.5 },
+  { icon: Sparkles, label: 'Story Weaver', style: { top: '60%', right: '20%' }, x: [0, 20, 0], duration: 8 },
+  { icon: FileCheck2, label: 'Paper Grader', style: { top: '2%', right: '30%' }, y: [0, -15, 0], duration: 6.5 },
+  { icon: FileQuestion, label: 'Assessments', style: { bottom: '5%', left: '35%' }, y: [0, 15, 0], duration: 5.8 },
 ];
 
 
@@ -36,7 +36,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background to-muted p-4">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4">
       {/* Floating feature cards */}
       {features.map(({ icon: Icon, label, style, x, y, duration }) => (
         <motion.div
