@@ -15,21 +15,23 @@ import { VisualAidGenerator } from "@/components/visual-aid-generator"
 import { StoryWeaver } from "@/components/story-weaver"
 import { AssessmentGenerator } from "@/components/assessment-generator"
 import { LessonPlanner } from "@/components/lesson-planner"
-import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck } from "lucide-react"
+import { PaperGrader } from "@/components/paper-grader"
+import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2 } from "lucide-react"
 
 const features = [
-  { value: 'lesson-planner', label: 'Lesson Planner', icon: BookOpenCheck, component: <LessonPlanner /> },
   { value: 'local-content', label: 'Local Content', icon: FileText, component: <LocalContentGenerator /> },
+  { value: 'lesson-planner', label: 'Lesson Planner', icon: BookOpenCheck, component: <LessonPlanner /> },
   { value: 'differentiated-materials', label: 'Worksheets', icon: Bot, component: <WorksheetGenerator /> },
   { value: 'knowledge-base', label: 'Knowledge Base', icon: Lightbulb, component: <KnowledgeBase /> },
   { value: 'visual-aids', label: 'Visual Aids', icon: ImageIcon, component: <VisualAidGenerator /> },
   { value: 'story-weaver', label: 'Story Weaver', icon: Sparkles, component: <StoryWeaver /> },
   { value: 'assessment-generator', label: 'Assessments', icon: FileQuestion, component: <AssessmentGenerator /> },
+  { value: 'paper-grader', label: 'Paper Grader', icon: FileCheck2, component: <PaperGrader /> },
 ];
 
 
 export default function DashboardPage() {
-  const [activeFeature, setActiveFeature] = useState('lesson-planner');
+  const [activeFeature, setActiveFeature] = useState('local-content');
 
   const activeComponent = features.find(f => f.value === activeFeature)?.component;
 

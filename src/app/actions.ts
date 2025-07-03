@@ -8,6 +8,7 @@ import { generateStory, type GenerateStoryOutput } from '@/ai/flows/story-weaver
 import { textToSpeech, type TextToSpeechOutput } from '@/ai/flows/story-weaver-tts'
 import { generateAssessment, type GenerateAssessmentOutput } from '@/ai/flows/assessment-generator'
 import { generateLessonPlan, type GenerateLessonPlanOutput } from '@/ai/flows/lesson-planner'
+import { paperGrader, type PaperGraderOutput } from '@/ai/flows/paper-grader'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -123,3 +124,28 @@ export const handleLessonPlan = async (values: { topic: string, gradeLevel: stri
     return { success: false, error: `Failed to generate lesson plan: ${errorMessage}` }
   }
 }
+
+export const handlePaperGrader = async (formData: FormData): Promise<ActionResponse<PaperGraderOutput>> => {
+  try {
+    const answerSheetImage = formData.get('answerSheetImage') as File | null;
+    const answerKey = formData.get('answerKey') as string | null;
+
+    if (!answerSheetImage || answerSheetImage.size === 0) {
+      return { success: false, error: 'An image of the answer sheet is required.' };
+    }
+    if (!answerKey) {
+      return { success: false, error: 'An answer key is required.' };
+    }
+
+    const answerSheetImageUri = await fileToDataUri(answerSheetImage);
+    const result = await paperGrader({
+      answerSheetImageUri,
+      answerKey,
+    });
+    return { success: true, data: result };
+  } catch (error) {
+    console.error(error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+    return { success: false, error: `Failed to grade paper: ${errorMessage}` };
+  }
+};
