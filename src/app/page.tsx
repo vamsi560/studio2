@@ -11,16 +11,15 @@ import { Logo } from '@/components/logo';
 import { Loader2, Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2 } from 'lucide-react';
 
 const features = [
-  { icon: FileText, label: 'Local Content', style: { top: '10%', left: '5%' }, y: [0, -20, 0], duration: 5 },
-  { icon: BookOpenCheck, label: 'Lesson Planner', style: { top: '15%', right: '5%' }, y: [0, 25, 0], duration: 6 },
-  { icon: Bot, label: 'Worksheets', style: { bottom: '20%', left: '2%' }, y: [0, -15, 0], duration: 7 },
-  { icon: Lightbulb, label: 'Knowledge Base', style: { bottom: '10%', right: '8%' }, y: [0, 20, 0], duration: 4 },
-  { icon: ImageIcon, label: 'Visual Aids', style: { top: '50%', left: '15%' }, x: [0, -20, 0], duration: 5.5 },
-  { icon: Sparkles, label: 'Story Weaver', style: { top: '60%', right: '20%' }, x: [0, 20, 0], duration: 8 },
-  { icon: FileCheck2, label: 'Paper Grader', style: { top: '2%', right: '30%' }, y: [0, -15, 0], duration: 6.5 },
-  { icon: FileQuestion, label: 'Assessments', style: { bottom: '5%', left: '35%' }, y: [0, 15, 0], duration: 5.8 },
+  { icon: FileText, label: 'Local Content', style: { top: '10%', left: '5%' }, x: -10, y: 15, duration: 8, delay: 0 },
+  { icon: BookOpenCheck, label: 'Lesson Planner', style: { top: '15%', right: '5%' }, x: 10, y: -15, duration: 9, delay: 2 },
+  { icon: Bot, label: 'Worksheets', style: { bottom: '20%', left: '2%' }, x: -15, y: -10, duration: 10, delay: 4 },
+  { icon: Lightbulb, label: 'Knowledge Base', style: { bottom: '10%', right: '8%' }, x: 15, y: 10, duration: 7, delay: 1 },
+  { icon: ImageIcon, label: 'Visual Aids', style: { top: '40%', left: '12%' }, x: -20, y: 0, duration: 8.5, delay: 3 },
+  { icon: Sparkles, label: 'Story Weaver', style: { top: '50%', right: '12%' }, x: 20, y: 0, duration: 11, delay: 5 },
+  { icon: FileCheck2, label: 'Paper Grader', style: { top: '5%', right: '25%' }, x: 0, y: -15, duration: 9.5, delay: 6 },
+  { icon: FileQuestion, label: 'Assessments', style: { bottom: '5%', left: '25%' }, x: 0, y: 15, duration: 7.5, delay: 2.5 },
 ];
-
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,21 +37,26 @@ export default function LoginPage() {
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4">
       {/* Floating feature cards */}
-      {features.map(({ icon: Icon, label, style, x, y, duration }) => (
+      {features.map((feature) => (
         <motion.div
-          key={label}
+          key={feature.label}
           className="absolute z-10 hidden items-center gap-2 rounded-lg border border-primary/10 bg-card/60 p-2 text-sm text-card-foreground shadow-lg backdrop-blur-sm md:flex"
-          style={style}
-          animate={{ x, y }}
+          style={feature.style}
+          initial={{ opacity: 0 }}
+          animate={{
+            x: [0, feature.x, 0],
+            y: [0, feature.y, 0],
+            opacity: [0, 0.9, 0],
+          }}
           transition={{
-            duration,
+            duration: feature.duration,
             ease: 'easeInOut',
             repeat: Infinity,
-            repeatType: 'loop',
+            repeatDelay: feature.delay,
           }}
         >
-          <Icon className="h-5 w-5 text-primary" />
-          <span className="font-body font-medium">{label}</span>
+          <feature.icon className="h-5 w-5 text-primary" />
+          <span className="font-body font-medium">{feature.label}</span>
         </motion.div>
       ))}
 
