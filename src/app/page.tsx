@@ -8,7 +8,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/logo';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2 } from 'lucide-react';
+
+const features = [
+  { icon: FileText, label: 'Local Content', style: { top: '15%', left: '10%' }, y: [0, -20, 0], duration: 5 },
+  { icon: BookOpenCheck, label: 'Lesson Planner', style: { top: '25%', right: '8%' }, y: [0, 25, 0], duration: 6 },
+  { icon: Bot, label: 'Worksheets', style: { bottom: '30%', left: '5%' }, y: [0, -15, 0], duration: 7 },
+  { icon: Lightbulb, label: 'Knowledge Base', style: { bottom: '15%', right: '12%' }, y: [0, 20, 0], duration: 4 },
+  { icon: ImageIcon, label: 'Visual Aids', style: { top: '50%', left: '20%' }, x: [0, -20, 0], duration: 5 },
+  { icon: Sparkles, label: 'Story Weaver', style: { top: '60%', right: '22%' }, x: [0, 20, 0], duration: 8 },
+  { icon: FileCheck2, label: 'Paper Grader', style: { top: '5%', right: '30%' }, y: [0, -15, 0], duration: 6 },
+  { icon: FileQuestion, label: 'Assessments', style: { bottom: '10%', left: '35%' }, y: [0, 15, 0], duration: 5.5 },
+];
+
 
 export default function LoginPage() {
   const router = useRouter();
@@ -24,11 +36,31 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-muted p-4">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background to-muted p-4">
+      {/* Floating feature cards */}
+      {features.map(({ icon: Icon, label, style, x, y, duration }) => (
+        <motion.div
+          key={label}
+          className="absolute z-10 hidden items-center gap-2 rounded-lg border border-primary/10 bg-card/60 p-2 text-sm text-card-foreground shadow-lg backdrop-blur-sm md:flex"
+          style={style}
+          animate={{ x, y }}
+          transition={{
+            duration,
+            ease: 'easeInOut',
+            repeat: Infinity,
+            repeatType: 'loop',
+          }}
+        >
+          <Icon className="h-5 w-5 text-primary" />
+          <span className="font-body font-medium">{label}</span>
+        </motion.div>
+      ))}
+
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
+        className="z-20"
       >
         <Card className="w-full max-w-sm">
           <CardHeader className="text-center">
