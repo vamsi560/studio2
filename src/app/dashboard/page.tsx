@@ -4,7 +4,8 @@ import { WorksheetGenerator } from "@/components/worksheet-generator"
 import { KnowledgeBase } from "@/components/knowledge-base"
 import { VisualAidGenerator } from "@/components/visual-aid-generator"
 import { StoryWeaver } from "@/components/story-weaver"
-import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles } from "lucide-react"
+import { AssessmentGenerator } from "@/components/assessment-generator"
+import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion } from "lucide-react"
 
 export default function DashboardPage() {
   return (
@@ -16,7 +17,7 @@ export default function DashboardPage() {
         </p>
       </div>
       <Tabs defaultValue="local-content" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 h-auto">
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 h-auto">
           <TabsTrigger value="local-content" className="py-2 flex-col h-auto gap-1 text-sm">
             <FileText className="h-5 w-5 mb-1" />
             <span>Local Content</span>
@@ -37,6 +38,10 @@ export default function DashboardPage() {
             <Sparkles className="h-5 w-5 mb-1" />
             <span>Story Weaver</span>
           </TabsTrigger>
+          <TabsTrigger value="assessment-generator" className="py-2 flex-col h-auto gap-1 text-sm">
+            <FileQuestion className="h-5 w-5 mb-1" />
+            <span>Assessments</span>
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="local-content">
           <LocalContentGenerator />
@@ -52,6 +57,9 @@ export default function DashboardPage() {
         </TabsContent>
         <TabsContent value="story-weaver">
           <StoryWeaver />
+        </TabsContent>
+        <TabsContent value="assessment-generator">
+          <AssessmentGenerator />
         </TabsContent>
       </Tabs>
     </div>

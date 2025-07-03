@@ -5,6 +5,7 @@ import { generateDifferentiatedWorksheets, type GenerateDifferentiatedWorksheets
 import { instantKnowledgeExplanation, type InstantKnowledgeExplanationOutput } from '@/ai/flows/instant-knowledge-explanations'
 import { generateVisualAid, type GenerateVisualAidOutput } from '@/ai/flows/visual-aid-design'
 import { generateStory, type GenerateStoryOutput } from '@/ai/flows/story-weaver'
+import { generateAssessment, type GenerateAssessmentOutput } from '@/ai/flows/assessment-generator'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -85,5 +86,16 @@ export const handleStoryWeaver = async (values: { topic: string, characters: str
     console.error(error)
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
     return { success: false, error: `Failed to generate story: ${errorMessage}` }
+  }
+}
+
+export const handleAssessmentGeneration = async (values: { topic: string, numQuestions: number, questionTypes: string, gradeLevel: string }): Promise<ActionResponse<GenerateAssessmentOutput>> => {
+  try {
+    const result = await generateAssessment(values)
+    return { success: true, data: result }
+  } catch (error) {
+    console.error(error)
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+    return { success: false, error: `Failed to generate assessment: ${errorMessage}` }
   }
 }
