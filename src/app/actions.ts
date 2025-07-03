@@ -129,18 +129,17 @@ export const handlePaperGrader = async (formData: FormData): Promise<ActionRespo
   try {
     const answerSheetImage = formData.get('answerSheetImage') as File | null;
     const answerKey = formData.get('answerKey') as string | null;
+    const topic = formData.get('topic') as string | null;
 
     if (!answerSheetImage || answerSheetImage.size === 0) {
       return { success: false, error: 'An image of the answer sheet is required.' };
-    }
-    if (!answerKey) {
-      return { success: false, error: 'An answer key is required.' };
     }
 
     const answerSheetImageUri = await fileToDataUri(answerSheetImage);
     const result = await paperGrader({
       answerSheetImageUri,
-      answerKey,
+      ...(answerKey && { answerKey }),
+      ...(topic && { topic }),
     });
     return { success: true, data: result };
   } catch (error) {

@@ -16,11 +16,30 @@ import { Loader2, CheckCircle2, XCircle, AlertCircle } from "lucide-react"
 import type { PaperGraderOutput } from "@/ai/flows/paper-grader"
 import { motion } from "framer-motion"
 import { Badge } from "./ui/badge"
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 
 const formSchema = z.object({
   answerSheetImage: z.instanceof(File).refine(file => file.size > 0, "An image of the answer sheet is required."),
-  answerKey: z.string().min(10, "An answer key is required."),
-})
+  gradingMode: z.enum(['key', 'ai'], { required_error: "You must select a grading mode." }),
+  answerKey: z.string().optional(),
+  topic: z.string().optional(),
+}).superRefine((data, ctx) => {
+    if (data.gradingMode === 'key' && (!data.answerKey || data.answerKey.length < 10)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "An answer key of at least 10 characters is required.",
+            path: ['answerKey']
+        });
+    }
+    if (data.gradingMode === 'ai' && (!data.topic || data.topic.length < 1)) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "A topic is required for AI-assisted grading.",
+            path: ['topic']
+        });
+    }
+});
+
 
 export function PaperGrader() {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,8 +50,10 @@ export function PaperGrader() {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { answerKey: "" },
+    defaultValues: { gradingMode: 'key', answerKey: "" },
   })
+
+  const gradingMode = form.watch("gradingMode");
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true)
@@ -40,7 +61,12 @@ export function PaperGrader() {
 
     const formData = new FormData()
     formData.append('answerSheetImage', values.answerSheetImage)
-    formData.append('answerKey', values.answerKey)
+    if (values.gradingMode === 'key' && values.answerKey) {
+        formData.append('answerKey', values.answerKey)
+    }
+    if (values.gradingMode === 'ai' && values.topic) {
+        formData.append('topic', values.topic)
+    }
 
     const response = await handlePaperGrader(formData)
     setIsLoading(false)
@@ -60,6 +86,7 @@ export function PaperGrader() {
     if (file) {
       form.setValue('answerSheetImage', file);
       setPreview(URL.createObjectURL(file));
+      form.clearErrors('answerSheetImage');
     }
   };
 
@@ -68,7 +95,7 @@ export function PaperGrader() {
     <Card className="w-full shadow-lg">
       <CardHeader>
         <CardTitle className="font-headline">AI Paper Grader</CardTitle>
-        <CardDescription>Upload a student's answer sheet and the answer key to get an automated grading report.</CardDescription>
+        <CardDescription>Upload a student's answer sheet, provide an answer key or a topic, and get an automated grading report.</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -85,6 +112,7 @@ export function PaperGrader() {
                       accept="image/*"
                       ref={fileInputRef}
                       onChange={handleFileChange}
+                      className="file:text-primary file:font-semibold"
                     />
                   </FormControl>
                   <FormMessage />
@@ -97,20 +125,78 @@ export function PaperGrader() {
                 <Image src={preview} alt="Answer sheet preview" width={200} height={250} className="rounded-md object-contain" />
               </div>
             )}
-
+            
             <FormField
               control={form.control}
-              name="answerKey"
+              name="gradingMode"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Answer Key</FormLabel>
-                   <FormControl>
-                    <Textarea placeholder="Paste the answer key here. You can copy it from the Assessment Generator. For best results, include question numbers." {...field} rows={6} />
+                <FormItem className="space-y-3">
+                  <FormLabel>Grading Mode</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col sm:flex-row gap-4"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="key" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Use Answer Key
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="ai" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          AI-Assisted Grading (No Key)
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            {gradingMode === 'key' && (
+                <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.3}}>
+                    <FormField
+                    control={form.control}
+                    name="answerKey"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Answer Key</FormLabel>
+                        <FormControl>
+                            <Textarea placeholder="Paste the answer key here. You can copy it from the Assessment Generator. For best results, include question numbers." {...field} rows={6} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </motion.div>
+            )}
+
+            {gradingMode === 'ai' && (
+                <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.3}}>
+                    <FormField
+                    control={form.control}
+                    name="topic"
+                    render={({ field }) => (
+                        <FormItem>
+                        <FormLabel>Test Topic / Subject</FormLabel>
+                        <FormControl>
+                            <Input placeholder="e.g., The Indian Freedom Struggle, Photosynthesis, Algebra Basics" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        </FormItem>
+                    )}
+                    />
+                </motion.div>
+            )}
+
           </CardContent>
           <CardFooter>
             <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
