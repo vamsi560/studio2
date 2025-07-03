@@ -4,6 +4,7 @@ import { generateLocalContent, type GenerateLocalContentOutput } from '@/ai/flow
 import { generateDifferentiatedWorksheets, type GenerateDifferentiatedWorksheetsOutput } from '@/ai/flows/differentiated-material-generation'
 import { instantKnowledgeExplanation, type InstantKnowledgeExplanationOutput } from '@/ai/flows/instant-knowledge-explanations'
 import { generateVisualAid, type GenerateVisualAidOutput } from '@/ai/flows/visual-aid-design'
+import { generateStory, type GenerateStoryOutput } from '@/ai/flows/story-weaver'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -73,5 +74,16 @@ export const handleVisualAid = async (values: { description: string }): Promise<
     console.error(error)
     const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
     return { success: false, error: `Failed to generate visual aid: ${errorMessage}` }
+  }
+}
+
+export const handleStoryWeaver = async (values: { topic: string, characters: string, moral?: string, language: string }): Promise<ActionResponse<GenerateStoryOutput>> => {
+  try {
+    const result = await generateStory(values)
+    return { success: true, data: result }
+  } catch (error) {
+    console.error(error)
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+    return { success: false, error: `Failed to generate story: ${errorMessage}` }
   }
 }
