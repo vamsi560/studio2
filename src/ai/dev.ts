@@ -11,3 +11,4 @@ import '@/ai/flows/assessment-generator.ts';
 import '@/ai/flows/lesson-planner.ts';
 import '@/ai/flows/paper-grader.ts';
 import '@/ai/flows/oral-presentation-grader.ts';
+import '@/ai/flows/step-by-step-solver.ts';

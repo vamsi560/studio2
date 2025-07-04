@@ -10,6 +10,7 @@ import { generateAssessment, type GenerateAssessmentOutput } from '@/ai/flows/as
 import { generateLessonPlan, type GenerateLessonPlanOutput } from '@/ai/flows/lesson-planner'
 import { paperGrader, type PaperGraderOutput } from '@/ai/flows/paper-grader'
 import { oralPresentationGrader, type OralPresentationGraderOutput } from '@/ai/flows/oral-presentation-grader'
+import { solveProblemStepByStep, type StepByStepSolverOutput } from '@/ai/flows/step-by-step-solver'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -176,5 +177,16 @@ export const handleOralPresentationGrader = async (formData: FormData): Promise<
         console.error(error);
         const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
         return { success: false, error: `Failed to grade presentation: ${errorMessage}` };
+    }
+}
+
+export const handleStepByStepSolver = async (values: { problem: string }): Promise<ActionResponse<StepByStepSolverOutput>> => {
+    try {
+        const result = await solveProblemStepByStep(values);
+        return { success: true, data: result };
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, error: `Failed to solve problem: ${errorMessage}` };
     }
 }
