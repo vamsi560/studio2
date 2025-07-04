@@ -17,7 +17,8 @@ import { AssessmentGenerator } from "@/components/assessment-generator"
 import { LessonPlanner } from "@/components/lesson-planner"
 import { PaperGrader } from "@/components/paper-grader"
 import { OralPresentationGrader } from "@/components/oral-presentation-grader"
-import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2, Video } from "lucide-react"
+import { LivePracticeCoach } from "@/components/live-practice-coach"
+import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2, Video, Speech } from "lucide-react"
 
 const features = [
   { value: 'local-content', label: 'Local Content', icon: FileText, component: <LocalContentGenerator /> },
@@ -29,6 +30,7 @@ const features = [
   { value: 'assessment-generator', label: 'Assessments', icon: FileQuestion, component: <AssessmentGenerator /> },
   { value: 'paper-grader', label: 'Paper Grader', icon: FileCheck2, component: <PaperGrader /> },
   { value: 'presentation-grader', label: 'Presentation Grader', icon: Video, component: <OralPresentationGrader /> },
+  { value: 'live-practice', label: 'Live Practice Coach', icon: Speech, component: <LivePracticeCoach /> },
 ];
 
 
