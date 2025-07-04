@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react"
+import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -8,12 +9,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { handleStoryWeaver, handleTextToSpeech } from "@/app/actions"
 import { Loader2, Volume2 } from "lucide-react"
 import type { GenerateStoryOutput } from "@/ai/flows/story-weaver"
 import { motion } from "framer-motion"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 
 const formSchema = z.object({
   topic: z.string().min(1, "Topic is required."),
@@ -71,8 +72,8 @@ export function StoryWeaver() {
   return (
     <Card className="w-full shadow-lg">
       <CardHeader>
-        <CardTitle className="font-headline">Story Weaver</CardTitle>
-        <CardDescription>Weave magical stories for your students from a few simple ideas.</CardDescription>
+        <CardTitle className="font-headline">Storybook Illustrator</CardTitle>
+        <CardDescription>Weave and illustrate magical stories from a few simple ideas.</CardDescription>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -133,15 +134,16 @@ export function StoryWeaver() {
           <CardFooter>
             <Button type="submit" disabled={isLoading} className="w-full sm:w-auto">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Weave Story
+              {isLoading ? 'Generating Storybook...' : 'Weave Story'}
             </Button>
           </CardFooter>
         </form>
       </Form>
       {isLoading && (
          <CardContent>
-            <div className="flex justify-center items-center p-8">
+            <div className="flex justify-center items-center p-8 flex-col gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-muted-foreground">AI is writing and illustrating... this may take a moment.</p>
             </div>
          </CardContent>
       )}
@@ -152,7 +154,37 @@ export function StoryWeaver() {
           transition={{ duration: 0.5 }}
         >
           <CardContent>
-            <div className="mt-6 p-4 border rounded-md bg-muted/20">
+            <div className="mt-6 p-4 border rounded-md bg-muted/20 space-y-4">
+                {result.illustrations && result.illustrations.length > 0 && (
+                    <div>
+                         <h3 className="font-bold font-headline text-lg mb-4 text-center">Storybook Illustrations</h3>
+                        <Carousel className="w-full max-w-md mx-auto">
+                            <CarouselContent>
+                                {result.illustrations.map((src, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="p-1">
+                                    <Card>
+                                        <CardContent className="flex aspect-square items-center justify-center p-0">
+                                            <Image
+                                                src={src}
+                                                alt={`Illustration ${index + 1}`}
+                                                width={500}
+                                                height={500}
+                                                className="rounded-lg object-cover"
+                                                data-ai-hint="storybook illustration"
+                                            />
+                                        </CardContent>
+                                    </Card>
+                                    </div>
+                                </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                        </Carousel>
+                    </div>
+                )}
+
               <div className="flex justify-between items-center mb-2">
                  <h3 className="font-bold font-headline text-lg">Your Story:</h3>
                  <Button onClick={onListen} disabled={isTtsLoading || !result.story} variant="ghost" size="sm">

@@ -1,9 +1,8 @@
-// src/ai/flows/story-weaver.ts
 'use server';
 /**
- * @fileOverview An AI agent that weaves engaging stories for children.
+ * @fileOverview An AI agent that weaves engaging stories for children and illustrates them.
  *
- * - generateStory - A function that handles the story generation process.
+ * - generateStory - A function that handles the story and illustration generation process.
  * - GenerateStoryInput - The input type for the generateStory function.
  * - GenerateStoryOutput - The return type for the generateStory function.
  */
@@ -21,6 +20,7 @@ export type GenerateStoryInput = z.infer<typeof GenerateStoryInputSchema>;
 
 const GenerateStoryOutputSchema = z.object({
   story: z.string().describe('The generated story.'),
+  illustrations: z.array(z.string()).describe("A list of data URIs for the generated illustrations. The data URI must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
 });
 export type GenerateStoryOutput = z.infer<typeof GenerateStoryOutputSchema>;
 
@@ -28,24 +28,32 @@ export async function generateStory(input: GenerateStoryInput): Promise<Generate
   return storyWeaverFlow(input);
 }
 
-const storyWeaverPrompt = ai.definePrompt({
-  name: 'storyWeaverPrompt',
-  input: {schema: GenerateStoryInputSchema},
-  output: {schema: GenerateStoryOutputSchema},
-  prompt: `You are a master storyteller for children, skilled at weaving magical and engaging tales in various languages.
+const illustrationPromptSchema = z.object({
+  sceneDescriptions: z.array(z.string()).min(3).max(4).describe('A list of 3 or 4 detailed scene descriptions suitable for generating illustrations for the story.')
+})
 
-Create a wonderful story based on the following details:
+const storyAndIllustrationPromptsPrompt = ai.definePrompt({
+    name: 'storyAndIllustrationPromptsPrompt',
+    input: {schema: GenerateStoryInputSchema},
+    output: {schema: z.object({
+        story: z.string().describe('The generated story.'),
+        illustrationPrompts: illustrationPromptSchema,
+    })},
+    prompt: `You are a master storyteller and illustrator for children.
+    
+    First, create a wonderful story based on the following details. The story should be captivating, easy to understand, and culturally appropriate. Ensure the story has a clear beginning, middle, and end.
+    
+    Topic: {{{topic}}}
+    Characters: {{{characters}}}
+    {{#if moral}}
+    Moral of the story: {{{moral}}}
+    {{/if}}
+    Language: {{{language}}}
 
-Topic: {{{topic}}}
-Characters: {{{characters}}}
-{{#if moral}}
-Moral of the story: {{{moral}}}
-{{/if}}
-Language: {{{language}}}
-
-The story should be captivating, easy to understand for children, and culturally appropriate. Ensure the story has a clear beginning, middle, and end.
-`,
+    Second, after writing the story, create a list of 3-4 detailed scene descriptions from the story. These descriptions should be perfect prompts for an AI image generator to create illustrations for the story. The prompts should describe the visual elements of a key scene.
+    `,
 });
+
 
 const storyWeaverFlow = ai.defineFlow(
   {
@@ -54,7 +62,39 @@ const storyWeaverFlow = ai.defineFlow(
     outputSchema: GenerateStoryOutputSchema,
   },
   async input => {
-    const {output} = await storyWeaverPrompt(input);
-    return output!;
+    // Step 1: Generate story and illustration prompts
+    const { output: storyData } = await storyAndIllustrationPromptsPrompt(input);
+    
+    if (!storyData || !storyData.story || !storyData.illustrationPrompts) {
+      throw new Error("Failed to generate story and prompts.");
+    }
+    
+    const { story, illustrationPrompts } = storyData;
+
+    // Step 2: Generate illustrations for each prompt in parallel
+    const illustrationPromises = illustrationPrompts.sceneDescriptions.map(prompt => {
+      return ai.generate({
+        model: 'googleai/gemini-2.0-flash-preview-image-generation',
+        prompt: `Children's storybook illustration, cute and colorful style. Scene: ${prompt}`,
+        config: {
+          responseModalities: ['TEXT', 'IMAGE'],
+        },
+      });
+    });
+
+    const illustrationResults = await Promise.all(illustrationPromises);
+
+    const illustrations = illustrationResults.map(result => {
+        if (!result.media) {
+            // Handle cases where an image might not be generated
+            return 'https://placehold.co/400x400.png'; // Fallback placeholder
+        }
+        return result.media.url;
+    });
+
+    return {
+      story,
+      illustrations,
+    };
   }
 );

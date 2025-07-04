@@ -9,6 +9,7 @@ import { textToSpeech, type TextToSpeechOutput } from '@/ai/flows/story-weaver-t
 import { generateAssessment, type GenerateAssessmentOutput } from '@/ai/flows/assessment-generator'
 import { generateLessonPlan, type GenerateLessonPlanOutput } from '@/ai/flows/lesson-planner'
 import { paperGrader, type PaperGraderOutput } from '@/ai/flows/paper-grader'
+import { oralPresentationGrader, type OralPresentationGraderOutput } from '@/ai/flows/oral-presentation-grader'
 import { z } from 'zod'
 
 const fileToDataUri = async (file: File) => {
@@ -152,3 +153,28 @@ export const handlePaperGrader = async (formData: FormData): Promise<ActionRespo
     return { success: false, error: `Failed to grade paper: ${errorMessage}` };
   }
 };
+
+export const handleOralPresentationGrader = async (formData: FormData): Promise<ActionResponse<OralPresentationGraderOutput>> => {
+    try {
+        const presentationVideo = formData.get('presentationVideo') as File | null;
+        const topic = formData.get('topic') as string | null;
+
+        if (!presentationVideo || presentationVideo.size === 0) {
+            return { success: false, error: 'A video of the presentation is required.' };
+        }
+        if (!topic) {
+            return { success: false, error: 'The presentation topic is required.' };
+        }
+
+        const presentationVideoUri = await fileToDataUri(presentationVideo);
+        const result = await oralPresentationGrader({
+            presentationVideoUri,
+            topic,
+        });
+        return { success: true, data: result };
+    } catch (error) {
+        console.error(error);
+        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.'
+        return { success: false, error: `Failed to grade presentation: ${errorMessage}` };
+    }
+}

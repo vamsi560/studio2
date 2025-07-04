@@ -16,7 +16,8 @@ import { StoryWeaver } from "@/components/story-weaver"
 import { AssessmentGenerator } from "@/components/assessment-generator"
 import { LessonPlanner } from "@/components/lesson-planner"
 import { PaperGrader } from "@/components/paper-grader"
-import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2 } from "lucide-react"
+import { OralPresentationGrader } from "@/components/oral-presentation-grader"
+import { Bot, FileText, Lightbulb, Image as ImageIcon, Sparkles, FileQuestion, BookOpenCheck, FileCheck2, Video } from "lucide-react"
 
 const features = [
   { value: 'local-content', label: 'Local Content', icon: FileText, component: <LocalContentGenerator /> },
@@ -24,9 +25,10 @@ const features = [
   { value: 'differentiated-materials', label: 'Worksheets', icon: Bot, component: <WorksheetGenerator /> },
   { value: 'knowledge-base', label: 'Knowledge Base', icon: Lightbulb, component: <KnowledgeBase /> },
   { value: 'visual-aids', label: 'Visual Aids', icon: ImageIcon, component: <VisualAidGenerator /> },
-  { value: 'story-weaver', label: 'Story Weaver', icon: Sparkles, component: <StoryWeaver /> },
+  { value: 'story-weaver', label: 'Storybook Illustrator', icon: Sparkles, component: <StoryWeaver /> },
   { value: 'assessment-generator', label: 'Assessments', icon: FileQuestion, component: <AssessmentGenerator /> },
   { value: 'paper-grader', label: 'Paper Grader', icon: FileCheck2, component: <PaperGrader /> },
+  { value: 'presentation-grader', label: 'Presentation Grader', icon: Video, component: <OralPresentationGrader /> },
 ];
 
 

@@ -10,3 +10,4 @@ import '@/ai/flows/story-weaver-tts.ts';
 import '@/ai/flows/assessment-generator.ts';
 import '@/ai/flows/lesson-planner.ts';
 import '@/ai/flows/paper-grader.ts';
+import '@/ai/flows/oral-presentation-grader.ts';
