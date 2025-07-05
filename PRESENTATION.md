@@ -34,9 +34,12 @@ Sahayak AI directly tackles the core problems of:
 3.  **Differentiated Worksheet Generator:** Generates multiple worksheets for different grade levels from a single photo of a textbook page.
 4.  **Instant Knowledge Base:** Provides simple, analogy-based explanations for complex student questions in the local language.
 5.  **Visual Aid Design:** Creates simple, blackboard-friendly line drawings and charts from a text description.
-6.  **Story Weaver with TTS:** Weaves engaging children's stories from prompts and converts the text to audible speech.
+6.  **Storybook Illustrator with TTS:** Weaves engaging children's stories, illustrates them with unique images, and converts the text to audible speech.
 7.  **Assessment Generator:** Creates quizzes and tests with various question types (Multiple Choice, Short Answer, etc.) for any topic and grade.
 8.  **AI Paper Grader:** Automatically grades student answer sheets from an uploaded image, either using a provided answer key or its own subject matter expertise.
+9.  **Oral Presentation Grader:** Grades a student's presentation by analyzing an uploaded video for content, clarity, and engagement.
+10. **Live Practice Coach:** Allows students to practice presentations in real-time using their webcam and get instant AI feedback.
+11. **Step-by-Step Problem Solver:** Solves complex problems in Math, Physics, and Chemistry with detailed, step-by-step explanations.
 
 ## 4. Process Flow Diagram (Use-Case)
 
