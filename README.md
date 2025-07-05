@@ -35,14 +35,14 @@ Sahayak AI offers a comprehensive suite of tools to assist educators:
 
 ## Google / GCP Resources Used
 
-This project leverages the following Google Cloud services:
+This project leverages the following Google Cloud services, orchestrated via Genkit:
 
-*   **Firebase App Hosting:** Securely hosts the Next.js frontend and backend server actions.
-*   **Google AI (via Genkit):** Provides access to the powerful Gemini family of models for all generative AI tasks:
-    *   **Gemini Pro Models:** Used for text generation, reasoning, and complex analysis across most features.
-    *   **Gemini Vision Models:** Used for processing images (Paper Grader, Worksheet Generator) and videos (Presentation Grader).
-    *   **Gemini Image Generation Models:** Used to create illustrations for the Storybook Illustrator and Visual Aid Designer.
-    *   **Gemini Text-to-Speech (TTS) Models:** Used to generate audio for the Story Weaver's "read aloud" feature.
+*   **Firebase App Hosting:** Securely hosts the Next.js frontend and backend server actions, providing a scalable and managed environment for the application.
+*   **Google AI Models:**
+    *   **Gemini Pro & Flash Models:** These powerful and efficient models are used for the majority of text-based generation and reasoning tasks, such as generating lesson plans, creating assessments, explaining complex topics, and solving step-by-step problems.
+    *   **Gemini 1.5 Pro (Vision):** The state-of-the-art multimodal model is used for complex analysis involving both video and text. It powers the "Oral Presentation Grader" and "Live Practice Coach" by transcribing speech and analyzing visual cues. It also processes images for the "Paper Grader" and "Worksheet Generator".
+    *   **Gemini Image Generation Models:** A specialized model (`gemini-2.0-flash-preview-image-generation`) is used to create original, full-color illustrations for the "Storybook Illustrator" and simple line drawings for the "Visual Aid Designer".
+    *   **Gemini Text-to-Speech (TTS) Models:** A dedicated TTS model (`gemini-2.5-flash-preview-tts`) provides the "read aloud" functionality in the "Story Weaver," converting the generated story text into natural-sounding audio.
 
 ---
 *This application was prototyped with Firebase Studio.*
